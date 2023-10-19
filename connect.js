@@ -1,5 +1,5 @@
 // const path = require("path");
-// const mysql = require("mysql");
+const mysql = require("mysql");
 // const express = require("express");
 // const app = express();//实例化一个app
 // const router = express.Router();
@@ -79,17 +79,17 @@
 // //     // res.sendFile(path.resolve(__dirname, 'vueDream', 'dist', 'index.html'));
 // // })
 
-// //配置mysql
-// const option = {
-// 	host: "www.yousit",
-// 	// host: "49.985.02.01",
-// 	user: 'admin',
-// 	port: '3306', 
-//     password: "mmmmmmmm.",
-//     database: "node",
-//     connectTimeout: 5000, //连接超时
-//     //multipleStatements: false //是否允许一个query中包含多条sql语句
-// }
+//配置mysql
+const option = {
+	host: "localhost",
+	// host: "49.985.02.01",
+	user: 'root',
+	port: '3306', 
+    password: "",
+    database: "mysql",
+    connectTimeout: 5000, //连接超时
+    //multipleStatements: false //是否允许一个query中包含多条sql语句
+}
 
 // let pool;
 // repool();
