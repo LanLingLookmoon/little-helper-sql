@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const request = require('request');
 const query = require("../pool")
+const {generateToken} = require('../middleware/handdle_token')
 
 //查看链接成功
 router.get('/test', function (req, res) {
@@ -16,16 +17,30 @@ router.post('/example',async (req, res) => {
     let grant_type = "authorization_code"; // 授权（必填）默认值
     let url ='https://api.weixin.qq.com/sns/jscode2session?appid=' + appid + '&secret=' + mysecret + '&js_code=' + code + '&grant_type=' + grant_type;
 
-    request(url,(error, response, body)=>{
+    request(url,async (error, response, body)=>{
         let parsData = JSON.parse(body.toString());
         let openid = parsData.openid
 
         let sql = `INSERT INTO user_info (user_id, openid) VALUES (?, ?)`
-        let values = [5, openid];  
+        let findsql = `SELECT * FROM user_info WHERE openid = openid`
+        let values = [5, openid];
+        // res.send('Hello World!')
+        result = await query(findsql)
 
-        query(sql, values).then(res => {
-            console.log(res);
-        })
+        if (result.length == 0) {
+            await query(sql, values).then(res => {
+                console.log(222, res);
+            })
+        }
+
+        const token = generateToken({openid: openid})
+        const returnData = {
+            data: {
+                token: token
+            }
+        }
+        
+        res.send(BaseResult.success(returnData));
     })
 });
 
