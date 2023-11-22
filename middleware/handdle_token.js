@@ -3,8 +3,22 @@ const jsonWebToken = require('jsonwebtoken');
 const SECRET_KEY = 'kity269716067060'
 
 const verifyToken = (req, res, next) => {
-    // console.log(1111);
-    next()
+    const isLogin = '/api/example'
+    if (req.originalUrl == isLogin) {
+        next()
+        return
+    }
+    jsonWebToken.verify(req.headers.token, SECRET_KEY, function (__err, decode) {
+		if (__err) {
+			return res.status(401).send({
+				code: 401,
+				data: null,
+				message: "登录过期,请重新登录"
+			});
+		} else {
+			next();
+		}
+	})
 }
 
 const generateToken = (userInfo) => {
