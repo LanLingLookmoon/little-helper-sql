@@ -21,11 +21,12 @@ router.post('/example',async (req, res) => {
         let parsData = JSON.parse(body.toString());
         let openid = parsData.openid
 
-        let sql = `INSERT INTO user_info (user_id, openid) VALUES (?, ?)`
+        let sql = `INSERT INTO user_info (openid, token) VALUES (?, ?)`
         let findsql = `SELECT * FROM user_info WHERE openid = openid`
-        let values = [5, openid];
-        // res.send('Hello World!')
+
         result = await query(findsql)
+        const token = generateToken({openid: openid})
+        let values = [openid, token];
 
         if (result.length == 0) {
             await query(sql, values).then(res => {
@@ -33,7 +34,6 @@ router.post('/example',async (req, res) => {
             })
         }
 
-        const token = generateToken({openid: openid})
         const returnData = {
             data: {
                 token: token
