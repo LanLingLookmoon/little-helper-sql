@@ -33,9 +33,7 @@ router.post('/login',async (req, res) => {
         }
 
         const returnData = {
-            data: {
-                token: token
-            }
+            token: token
         }
         
         res.send(BaseResult.success(returnData));
