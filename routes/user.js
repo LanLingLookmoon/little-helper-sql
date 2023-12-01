@@ -4,13 +4,14 @@ const router = express.Router();
 const request = require('request');
 const query = require("../pool")
 const {generateToken} = require('../middleware/handdle_token')
+const { v4: uuidv4 } = require('uuid')
 
 //查看链接成功
 router.get('/test', function (req, res) {
     res.send('Hello World!')
 });
 
-router.post('/example',async (req, res) => {
+router.post('/login',async (req, res) => {
     let code = req.body.code
     let appid = "wx165408c54ca4c3f5"; //自己小程序后台管理的appid，可登录小程序后台查看
     let mysecret = "254b80961b29bf534603fbc599b1e396"; //小程序后台管理的secret，可登录小程序后台查看
@@ -21,17 +22,14 @@ router.post('/example',async (req, res) => {
         let parsData = JSON.parse(body.toString());
         let openid = parsData.openid
 
-        let sql = `INSERT INTO user_info (openid, token) VALUES (?, ?)`
+        let sql = `INSERT INTO user_info (user_id, openid, token) VALUES (?, ?, ?)`
         let findsql = `SELECT * FROM user_info WHERE openid = openid`
 
         result = await query(findsql)
         const token = generateToken({openid: openid})
-        let values = [openid, token];
-
+        let values = [uuidv4().replace(/\-/g, ''), openid, token];
         if (result.length == 0) {
-            await query(sql, values).then(res => {
-                console.log(222, res);
-            })
+            await query(sql, values)
         }
 
         const returnData = {

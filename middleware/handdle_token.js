@@ -3,7 +3,7 @@ const jsonWebToken = require('jsonwebtoken');
 const SECRET_KEY = 'kity269716067060'
 
 const verifyToken = (req, res, next) => {
-    const isLogin = '/api/example'
+    const isLogin = '/api/login'
     if (req.originalUrl == isLogin) {
         next()
         return
