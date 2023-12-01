@@ -33,9 +33,13 @@ router.post('/upload', upload.array('file'), function (req, res, next) {
     });
 })
 
-router.get('/image', function(req, res) {  
-  const imagePath = `${UPLOAD_PATH}/XNv90P0Ls7zj26c8d8410d2617d417f761be161724b3.png`; // 图片文件的路径  
+router.get('/image', async function(req, res) {
+  let findsql = `SELECT originalname, filename FROM goods WHERE id = `+req.query.id;
+  result = await query(findsql)
+  console.log(result[0].filename);
+  const imagePath = `${UPLOAD_PATH}/${result[0].originalname}`; // 图片文件的路径  
   const imageData = fs.readFileSync(imagePath); // 读取图片文件
+  res.setHeader('Content-Disposition', `attachment; filename=${result[0].filename}`); 
   res.send(imageData); // 将图片数据作为响应发送给前端  
 });  
 
